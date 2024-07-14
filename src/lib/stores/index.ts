@@ -1,4 +1,14 @@
+import type { User } from "lucia";
+import { getContext, setContext } from "svelte";
 import { writable } from "svelte/store";
-import type { TUserTable } from "$lib/server/db/schema";
 
-export let user = writable<null | TUserTable>(null);
+const USER_KEY = Symbol("USER");
+
+export function setUser(initial:User|null){
+    const user = writable<User | null>(initial);
+    return setContext(USER_KEY, user);
+}
+
+export function getUser(){
+    return getContext<ReturnType<typeof setUser>>(USER_KEY);
+}

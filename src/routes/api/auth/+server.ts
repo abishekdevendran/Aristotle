@@ -10,6 +10,7 @@ export async function GET({ url }) {
         })
     }
     return json({
-        'message': 'validated'
+        'message': 'validated',
+        user
     })
 }

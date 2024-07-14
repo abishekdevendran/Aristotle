@@ -2,6 +2,7 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Achievement } from '$lib/games/games';
+	import { generateSlug } from 'random-word-slugs';
 	export let game: {
 		name: string;
 		description: string;
@@ -21,11 +22,11 @@
 				{game.description}
 			</Dialog.Description>
 		</Dialog.Header>
-		<div class="grid gap-4 py-4">
-            ... list of all ongoing games
-		</div>
+		<div class="grid gap-4 py-4">... list of all ongoing games</div>
 		<Dialog.Footer>
-			<Button type="submit">Create a new lobby instead</Button>
+			<Button href={`/games/${game.name.replace(/\s/g, '-').toLowerCase()}/${generateSlug()}`}
+				>Create a new lobby instead</Button
+			>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

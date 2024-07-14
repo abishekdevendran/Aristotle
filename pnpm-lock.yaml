@@ -11,6 +11,9 @@ importers:
       '@dimforge/rapier3d-compat':
         specifier: ^0.11.2
         version: 0.11.2
+      '@fontsource-variable/lexend':
+        specifier: ^5.0.20
+        version: 5.0.20
       '@lucia-auth/adapter-drizzle':
         specifier: ^1.0.7
         version: 1.0.7(lucia@3.2.0)
@@ -41,6 +44,9 @@ importers:
       drizzle-orm:
         specifier: ^0.31.0
         version: 0.31.0(@cloudflare/workers-types@4.20240614.0)(@neondatabase/serverless@0.9.3)(@types/pg@8.11.6)
+      embla-carousel-svelte:
+        specifier: ^8.1.6
+        version: 8.1.6(svelte@4.2.17)
       formsnap:
         specifier: ^1.0.0
         version: 1.0.0(svelte@4.2.17)(sveltekit-superforms@2.14.0(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.13.0)))(svelte@4.2.17)(vite@5.2.12(@types/node@20.13.0)))(@types/json-schema@7.0.15)(esbuild-runner@2.2.2(esbuild@0.19.12))(esbuild@0.19.12)(svelte@4.2.17))
@@ -56,6 +62,9 @@ importers:
       partysocket:
         specifier: 1.0.1
         version: 1.0.1
+      random-word-slugs:
+        specifier: ^0.1.7
+        version: 0.1.7
       svelte-sonner:
         specifier: ^0.3.24
         version: 0.3.24(svelte@4.2.17)
@@ -772,6 +781,9 @@ packages:
 
   '@floating-ui/utils@0.2.2':
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
+
+  '@fontsource-variable/lexend@5.0.20':
+    resolution: {integrity: sha512-s3n41nSAqqVotQMgejaWfjQEcbH0oQ7gk9PUD5jKOEnqUgUB5F2cuqBzTEfwN9xOpvXz1RhRCsN2GmC992H+nw==}
 
   '@gcornut/valibot-json-schema@0.0.27':
     resolution: {integrity: sha512-xcMaUStVgQzPrK3d7PuLFbQ+3qSp6LzaLExAm52E3FKmUfjQa7Sw5cDK6Hfu/8WT0yfGsuSCuJ5uT1sosjR9Qg==}
@@ -1523,6 +1535,19 @@ packages:
   electron-to-chromium@1.4.788:
     resolution: {integrity: sha512-ubp5+Ev/VV8KuRoWnfP2QF2Bg+O2ZFdb49DiiNbz2VmgkIqrnyYaqIOqj8A6K/3p1xV0QcU5hBQ1+BmB6ot1OA==}
 
+  embla-carousel-reactive-utils@8.1.6:
+    resolution: {integrity: sha512-Wg+J2YoqLqkaqsXi7fTJaLmXm6BpgDRJ0EfTdvQ4KE/ip5OsUuKGpJsEQDTt4waGXSDyZhIBlfoQtgGJeyYQ1Q==}
+    peerDependencies:
+      embla-carousel: 8.1.6
+
+  embla-carousel-svelte@8.1.6:
+    resolution: {integrity: sha512-6ia2gyL5ckGhN4jOQTk0+RVyEpgZ5w5WfHKRPEs0pcB+Zh6eNuOQN5MKutm7DjiTRNpCTPF29WykjvW1q3DN2Q==}
+    peerDependencies:
+      svelte: ^3.49.0 || ^4.0.0
+
+  embla-carousel@8.1.6:
+    resolution: {integrity: sha512-9n7FVsbPAs1KD+JmO84DnEDOZMXPBQbLujjMQqvsBRN2CDWwgZ9hRSNapztdPnyJfzOIxowGmj0BUQ8ACYAPkA==}
+
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
@@ -2139,6 +2164,9 @@ packages:
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  random-word-slugs@0.1.7:
+    resolution: {integrity: sha512-8cyzxOIDeLFvwSPTgCItMXHGT5ZPkjhuFKUTww06Xg1dNMXuGxIKlARvS7upk6JXIm41ZKXmtlKR1iCRWklKmg==}
 
   read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
@@ -2918,6 +2946,8 @@ snapshots:
 
   '@floating-ui/utils@0.2.2': {}
 
+  '@fontsource-variable/lexend@5.0.20': {}
+
   '@gcornut/valibot-json-schema@0.0.27(@types/json-schema@7.0.15)(esbuild-runner@2.2.2(esbuild@0.19.12))(esbuild@0.19.12)(valibot@0.30.0)':
     dependencies:
       '@types/json-schema': 7.0.15
@@ -3561,6 +3591,18 @@ snapshots:
 
   electron-to-chromium@1.4.788: {}
 
+  embla-carousel-reactive-utils@8.1.6(embla-carousel@8.1.6):
+    dependencies:
+      embla-carousel: 8.1.6
+
+  embla-carousel-svelte@8.1.6(svelte@4.2.17):
+    dependencies:
+      embla-carousel: 8.1.6
+      embla-carousel-reactive-utils: 8.1.6(embla-carousel@8.1.6)
+      svelte: 4.2.17
+
+  embla-carousel@8.1.6: {}
+
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
@@ -4175,6 +4217,8 @@ snapshots:
     optional: true
 
   queue-microtask@1.2.3: {}
+
+  random-word-slugs@0.1.7: {}
 
   read-cache@1.0.0:
     dependencies:
