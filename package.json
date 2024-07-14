@@ -14,7 +14,9 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db": "drizzle-kit generate && drizzle-kit migrate",
-		"studio": "drizzle-kit studio"
+		"studio": "drizzle-kit studio",
+		"party": "partykit dev",
+		"party:deploy": "partykit deploy"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -26,6 +28,7 @@
 		"dotenv": "^16.4.5",
 		"drizzle-kit": "^0.22.1",
 		"lucia": "^3.2.0",
+		"partykit": "0.0.107",
 		"postcss": "^8.4.38",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
@@ -53,6 +56,8 @@
 		"formsnap": "^1.0.0",
 		"lucide-svelte": "^0.381.0",
 		"mode-watcher": "^0.3.0",
+		"nanoid": "^5.0.7",
+		"partysocket": "1.0.1",
 		"svelte-sonner": "^0.3.24",
 		"sveltekit-superforms": "^2.14.0",
 		"tailwind-merge": "^2.3.0",

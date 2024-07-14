@@ -10,15 +10,15 @@ import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private';
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
 export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    attributes: {
-      // set to `true` when using HTTPS
+	sessionCookie: {
+		attributes: {
+			// set to `true` when using HTTPS
 			secure: !dev
 		}
 	},
 	getUserAttributes: (attributes) => {
-    return {
-      name: attributes.name
+		return {
+			name: attributes.name
 		};
 	}
 });

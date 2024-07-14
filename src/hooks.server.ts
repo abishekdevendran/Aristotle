@@ -1,6 +1,9 @@
 // src/hooks.server.ts
+import { loadAndRegisterGames } from '$lib/games';
 import { lucia } from '$lib/server/auth';
 import type { Handle } from '@sveltejs/kit';
+
+loadAndRegisterGames();
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
