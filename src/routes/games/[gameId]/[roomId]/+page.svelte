@@ -109,6 +109,7 @@
 <svelte:head>
 	<title>{data.game.name} | {data.roomId} | Aristotle</title>
 </svelte:head>
+<div class="container flex-col flex items-center justify-center gap-2">
 {#if $socket}
 	<ConnectionStatus socket={$socket} />
 	<form
@@ -129,20 +130,22 @@
 		<Button type="submit">Send</Button>
 	</form>
 {/if}
-{#if messages.length > 0}
-	{#each messages as message}
-		<p>
-			{message.id
-				? message.id === $user.id
-					? 'You'
-					: players.find((el) => el.id === message.id)?.name ?? 'Unknown'
-				: 'Unknown'}
-			:{message.message}
-		</p>
-	{/each}
-{:else}
-	<p>No messages</p>
-{/if}
+<div class="flex max-h-96 flex-col overflow-x-hidden overflow-y-auto w-full">
+	{#if messages.length > 0}
+		{#each messages as message}
+			<p>
+				{message.id
+					? message.id === $user.id
+						? 'You'
+						: players.find((el) => el.id === message.id)?.name ?? 'Unknown'
+					: 'Unknown'}
+				:{message.message}
+			</p>
+		{/each}
+	{:else}
+		<p>No messages</p>
+	{/if}
+</div>
 {#if players.length > 0}
 	<h2>Players</h2>
 	<ul>
@@ -172,3 +175,4 @@
 {:else}
 	<p>No players</p>
 {/if}
+</div>
