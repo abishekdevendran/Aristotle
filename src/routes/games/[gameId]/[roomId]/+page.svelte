@@ -7,12 +7,22 @@
 	import { GetSocket } from '$lib/stores/socket.js';
 	import type { Player } from '$lib/types.js';
 	import { toast } from 'svelte-sonner';
+	import { flip } from 'svelte/animate';
+	import { dndzone, dragHandle, dragHandleZone, type DndEvent } from 'svelte-dnd-action';
+	import GripVertical from 'lucide-svelte/icons/grip-vertical';
+	const flipDurationMs = 300;
 	let messages: {
 		message: string;
 		id?: string;
 	}[] = [];
 	let players: Player[] = [];
 	let playerOrder: string[] = [];
+	const dummyPlayerOrder = ['js67vkjw6uuwbrhf', '6glnfaulseiohnqd'];
+	$: dndObject = playerOrder.map((e) => ({
+		id: e,
+		name: players.find((el) => el.id === e)?.name ?? 'Unknown'
+	}));
+	$: console.log(dndObject);
 	const user = getUser();
 	const socket = GetSocket();
 	let hasEventListenerAdded = false;
@@ -34,7 +44,9 @@
 							type: 'MESSAGE';
 							data: { id: string; message: string };
 					  }
-					| { type: 'JOIN' | 'LEAVE'; data: { message: string; player: Player } };
+					| { type: 'JOIN' | 'LEAVE'; data: { message: string; player: Player } }
+					| { type: 'REORDER'; data: { playerOrder: string[] } };
+				console.log(msg);
 				if (msg.type === 'POPULATE') {
 					toast.success('Data populated successfully');
 					players = msg.data.players;
@@ -46,18 +58,52 @@
 				} else if (msg.type === 'JOIN' || msg.type === 'LEAVE') {
 					toast(msg.data.message);
 					if (msg.type === 'JOIN') {
-						players = [...players, msg.data.player];
+						// if player doesnt already exist, add it
+						if (!players.find((el) => el.id === msg.data.player.id)) {
+							players = [...players, msg.data.player];
+						}
 						playerOrder = [...playerOrder, msg.data.player.id];
-					} else{
-						players = players.filter((el) => el.id !== msg.data.player.id);
+					} else {
 						playerOrder = playerOrder.filter((el) => el !== msg.data.player.id);
 					}
+				} else if (msg.type === 'REORDER') {
+					playerOrder = msg.data.playerOrder;
 				}
 			});
 			hasEventListenerAdded = true;
 		}
 	}
 	let textInput = '';
+	function handleDndConsider(
+		e: CustomEvent<
+			DndEvent<{
+				id: string;
+				name: string;
+			}>
+		>
+	) {
+		const { items } = e.detail;
+		console.log('consider', items);
+		dndObject = items;
+	}
+	function handleDndFinalize(
+		e: CustomEvent<
+			DndEvent<{
+				id: string;
+				name: string;
+			}>
+		>
+	) {
+		const { items } = e.detail;
+		console.log('finalize', items);
+		dndObject = items;
+		$socket?.send(
+			JSON.stringify({
+				type: 'REORDER',
+				data: { playerOrder: items.map((el) => el.id) }
+			})
+		);
+	}
 </script>
 
 <svelte:head>
@@ -67,7 +113,8 @@
 	<ConnectionStatus socket={$socket} />
 	<form
 		on:submit|preventDefault={() => {
-			// messages.push({ data: 'You: ' + textInput });
+			messages = [...messages, { id: $user.id ?? 'Unknown', message: textInput }];
+			console.log(messages);
 			$socket.send(
 				JSON.stringify({
 					type: 'MESSAGE',
@@ -86,8 +133,11 @@
 	{#each messages as message}
 		<p>
 			{message.id
-				? players.find((el) => el.id === message.id)?.name ?? 'Unknown'
-				: 'You: '}:{message.message}
+				? message.id === $user.id
+					? 'You'
+					: players.find((el) => el.id === message.id)?.name ?? 'Unknown'
+				: 'Unknown'}
+			:{message.message}
 		</p>
 	{/each}
 {:else}
@@ -97,9 +147,27 @@
 	<h2>Players</h2>
 	<ul>
 		<!-- players sorted by playerOrder -->
-		{#each playerOrder as id}
+		<!-- {#each playerOrder as id}
 			<li>{players.find((el) => el.id === id)?.name ?? 'Unknown'}</li>
-		{/each}
+		{/each} -->
+		<div
+			use:dragHandleZone={{
+				items: dndObject
+			}}
+			on:consider={handleDndConsider}
+			on:finalize={handleDndFinalize}
+		>
+			{#each dndObject as dndObject (dndObject.id)}
+				<div class="flex gap-2" animate:flip={{ duration: flipDurationMs }}>
+					<div use:dragHandle aria-label="drag-handle for {dndObject.name}" class="handle">
+						<GripVertical />
+					</div>
+					<span>
+						{players.find((el) => el.id === dndObject.id)?.name ?? 'Unknown'}
+					</span>
+				</div>
+			{/each}
+		</div>
 	</ul>
 {:else}
 	<p>No players</p>

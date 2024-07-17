@@ -37,10 +37,16 @@ export default class Server implements Party.Server {
         throw new Error("Unauthorized")
       }
       console.log(`Authenticated user ${userId} in session ${sessionId}`);
-      // store the user data locally
-      this.players.push(
-        response.user
-      );
+      // find the player in the list of players
+      const player = Server.players.find((p) => p.id === userId);
+      if (!player) {
+        // store the user data locally
+        this.players.push({
+          ...response.user,
+          isConnected: false,
+        }
+        );
+      }
       this.playerOrder.push(response.user.id);
       // forward the request onwards on onConnect
       return request;
@@ -57,14 +63,17 @@ export default class Server implements Party.Server {
     // let's remove the player from the list of players
     const index = Server.players.findIndex((p) => p.connId === connection.id);
     const player = Server.players[index];
-    if (index !== -1) {
-      Server.players.splice(index, 1);
+    if (index === -1) {
+      console.error("Player not found");
+      return;
     }
-    // let's remove the player from the list of playerOrder
-    const orderIndex = Server.playerOrder.findIndex((p) => p === player.id);
-    if (orderIndex !== -1) {
-      Server.playerOrder.splice(orderIndex, 1);
-    }
+    // let's update the player's connection status
+    Server.playerCount--;
+    Server.players[index].isConnected = false;
+    Server.players[index].connId = undefined;
+    Server.playerOrder = Server.playerOrder.filter((p) => p !== player.id);
+    console.log("Server players", Server.players);
+    console.log("Server playerOrder", Server.playerOrder);
     // let everyone know that a player has left
     this.room.broadcast(
       JSON.stringify({
@@ -93,8 +102,9 @@ export default class Server implements Party.Server {
       return conn.close(1000, "Something went wrong");
     }
     Server.players[idx].connId = conn.id;
+    Server.players[idx].isConnected = true;
     Server.playerCount++;
-    console.log(Server.players);
+
 
     // let everyone know that a new player has joined
     this.room.broadcast(
@@ -108,6 +118,8 @@ export default class Server implements Party.Server {
       // ...except for the connection it came from
       [conn.id]
     );
+
+    console.log("Server players", Server.players);
 
     // let's send a message to the connection
     conn.send(JSON.stringify({
@@ -128,24 +140,42 @@ export default class Server implements Party.Server {
       data: {
         message: string;
       };
-    };
-    // save it to the list of messages
-    Server.messages.push({
-      id: Server.players.find((p) => p.connId === sender.id)?.id ?? '',
-      message: msg.data.message
-    });
-    // as well as broadcast it to all the other connections in the room...
-    this.room.broadcast(
-      JSON.stringify({
-        type: "MESSAGE",
-        data: {
-          message: msg.data.message,
-          id: Server.players.find((p) => p.connId === sender.id)?.id,
-        }
-      }),
-      // ...except for the connection it came from
-      [sender.id]
-    );
+    } | {
+      type: 'REORDER';
+      data: {
+        playerOrder: string[];
+      };
+    }
+    if (msg.type === 'REORDER') { 
+      Server.playerOrder = msg.data.playerOrder;
+      this.room.broadcast(
+        JSON.stringify({
+          type: "REORDER",
+          data: {
+            playerOrder: Server.playerOrder,
+          }
+        })
+      );
+    }
+    if (msg.type === 'MESSAGE') {
+      // save it to the list of messages
+      Server.messages.push({
+        id: Server.players.find((p) => p.connId === sender.id)?.id ?? '',
+        message: msg.data.message
+      });
+      // as well as broadcast it to all the other connections in the room...
+      this.room.broadcast(
+        JSON.stringify({
+          type: "MESSAGE",
+          data: {
+            message: msg.data.message,
+            id: Server.players.find((p) => p.connId === sender.id)?.id,
+          }
+        }),
+        // ...except for the connection it came from
+        [sender.id]
+      );
+    }
   }
 }
 

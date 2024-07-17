@@ -3,6 +3,7 @@ export type GAME_STATUS = 'LOBBY' | 'IN_SESSION';
 export interface Player {
     id: string;
     connId?: string;
+    isConnected: boolean;
     name: string;
 }
 
